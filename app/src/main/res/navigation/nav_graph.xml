@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_sources">
         <action
             android:id="@+id/action_sourcesFragment_to_topHeadlinesFragment"
-            app:destination="@id/topHeadlinesFragment" />
+            app:destination="@id/topHeadlinesFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left" />
     </fragment>
     <fragment
         android:id="@+id/topHeadlinesFragment"
