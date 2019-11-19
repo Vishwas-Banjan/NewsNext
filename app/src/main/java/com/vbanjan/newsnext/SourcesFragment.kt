@@ -10,7 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 
 
-class SourcesFragment : Fragment() {
+class
+SourcesFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(
