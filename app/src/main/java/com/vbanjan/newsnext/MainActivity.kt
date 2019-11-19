@@ -26,12 +26,15 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     TopHeadlinesFragment.OnFragmentInteractionListener,
     SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener {
 
+    override fun getSources() {
+        val sources = GetNewsSources().execute()
+    }
+
     var navController: NavController? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val sources = GetNewsSources().execute()
         navController = findNavController(R.id.nav_host_fragment)
     }
 
@@ -91,6 +94,6 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
 
     override fun onSourceClick(source: Source) {
         val bundle = bundleOf("selectedSource" to source)
-        navController?.navigate(R.id.action_sourcesFragment2_to_topHeadlinesFragment, bundle)
+        navController?.navigate(R.id.action_sourcesFragment_to_topHeadlinesFragment, bundle)
     }
 }

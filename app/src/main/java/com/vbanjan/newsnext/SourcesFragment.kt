@@ -3,6 +3,7 @@ package com.vbanjan.newsnext
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,12 @@ class SourcesFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_sources, container, false)
     }
 
+    override fun onStart() {
+        Log.d("demo", "onStart")
+        listener?.getSources()
+        super.onStart()
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is OnFragmentInteractionListener) {
@@ -35,8 +42,7 @@ class SourcesFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        fun onFragmentInteraction(uri: Uri)
+        fun getSources()
     }
 
 }

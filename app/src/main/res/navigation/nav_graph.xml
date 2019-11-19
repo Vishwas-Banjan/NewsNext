@@ -11,7 +11,7 @@
         android:label="fragment_sources"
         tools:layout="@layout/fragment_sources">
         <action
-            android:id="@+id/action_sourcesFragment2_to_topHeadlinesFragment"
+            android:id="@+id/action_sourcesFragment_to_topHeadlinesFragment"
             app:destination="@id/topHeadlinesFragment" />
     </fragment>
     <fragment
