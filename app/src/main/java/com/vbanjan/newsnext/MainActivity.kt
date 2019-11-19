@@ -43,13 +43,13 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     }
 
     fun setUpSourcesRecyclerView(sourcesArrayList: ArrayList<Source>) {
-        sourcesRecyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = SourceRecyclerViewAdapter(
-                sourcesArrayList,
-                this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
-            )
-        }
+        val sourcesRV = findViewById<RecyclerView>(R.id.sourcesRecyclerView)
+        sourcesRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        var adapter = SourceRecyclerViewAdapter(
+            sourcesArrayList,
+            this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
+        )
+        sourcesRV.adapter = adapter
     }
 
     inner class GetNewsSources : AsyncTask<Void, ArrayList<Source>, ArrayList<Source>>() {
