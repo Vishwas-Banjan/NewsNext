@@ -9,7 +9,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -31,7 +34,6 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener {
     var recentsQueue: Queue<Source>? = LinkedList<Source>()
     lateinit var progressDialog: ProgressDialog
-    lateinit var sharedPref: SharedPreferences
 
     override fun getSources() {
         val sources = GetNewsSources().execute()
@@ -42,21 +44,18 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        sharedPref = getSharedPreferences(
-            getString(R.string.preference_file_key), Context.MODE_PRIVATE
-        )
         progressDialog = ProgressDialog(this)
         progressDialog.setMessage("Loading...")
         navController = findNavController(R.id.nav_host_fragment)
     }
-
 
     override fun onFragmentInteraction(uri: Uri) {
     }
 
     fun setUpSourcesRecyclerView(sourcesArrayList: ArrayList<Source>) {
         val sourcesRV = findViewById<RecyclerView>(R.id.sourcesRecyclerView)
-        sourcesRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        sourcesRV.layoutManager =
+            LinearLayoutManager(this@MainActivity)
         var adapter = SourceRecyclerViewAdapter(
             sourcesArrayList,
             this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
@@ -80,7 +79,7 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
 
             val client = OkHttpClient()
             val url =
-                "https://newsapi.org/v2/sources?language=en&country=us&apiKey=712796de4cf6476fa1c8d86fab042601" //TODO Use getString
+                "https://newsapi.org/v2/sources?language=en&country=us&apiKey=" + getString(R.string.api_key)
 
             val request: Request = Request.Builder().url(url).build()
             try {
@@ -130,12 +129,18 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     override fun onSourceClick(source: Source) {
         val bundle = bundleOf("selectedSource" to source)
         if (recentsQueue?.size!! < 3) {
-            recentsQueue?.add(source)
+            if (!recentsQueue!!.contains(source))
+                recentsQueue?.add(source)
         } else {
             recentsQueue!!.remove()
-            recentsQueue!!.add(source)
+            if (!recentsQueue!!.contains(source))
+                recentsQueue?.add(source)
         }
         Log.d("demo", recentsQueue.toString())
+//        val builder = CustomTabsIntent.Builder()
+//        builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
+//        val customTabsIntent = builder.build()
+//        customTabsIntent.launchUrl(this, Uri.parse("https://www.google.com"))
         navController?.navigate(R.id.action_sourcesFragment_to_topHeadlinesFragment, bundle)
     }
 }
