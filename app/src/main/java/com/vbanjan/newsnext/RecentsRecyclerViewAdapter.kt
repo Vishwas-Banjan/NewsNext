@@ -1,34 +1,25 @@
 package com.vbanjan.newsnext
 
-import android.content.Context
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.source_list_item.view.*
+import kotlinx.android.synthetic.main.recents_list_item.view.*
 
-class SourceRecyclerViewAdapter(
-    val sources: ArrayList<Source>,
+class RecentsRecyclerViewAdapter(
+    val recents: ArrayList<Source>,
     val context: OnFragmentAdapterInteractionListener
 ) :
-    RecyclerView.Adapter<SourceRecyclerViewAdapter.ViewHolder>() {
+    RecyclerView.Adapter<RecentsRecyclerViewAdapter.ViewHolder>() {
 
     private val mListener: OnFragmentAdapterInteractionListener = context
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val source: Source = sources[position]
-        holder.sourceTitle.text = source.name
-        holder.sourceTitle.setOnClickListener {
-            mListener.onSourceClick(sources[position])
-        }
-    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(
-                R.layout.source_list_item,
+                R.layout.recents_list_item,
                 parent,
                 false
             )
@@ -36,16 +27,23 @@ class SourceRecyclerViewAdapter(
     }
 
     override fun getItemCount(): Int {
-        return sources.size
+        return recents.size
     }
 
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val source: Source = recents[position]
+        holder.sourceTitle.text = source.name
+        holder.sourceTitle.setOnClickListener {
+            mListener.onSourceClick(recents[position])
+        }
+    }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sourceTitle: TextView = itemView.sourceTextView
+
     }
 
     interface OnFragmentAdapterInteractionListener {
         fun onSourceClick(source: Source)
     }
-
 }

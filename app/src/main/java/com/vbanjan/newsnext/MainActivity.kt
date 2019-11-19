@@ -1,19 +1,20 @@
 package com.vbanjan.newsnext
 
+import android.app.ProgressDialog
+import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
+import android.view.View.GONE
+import android.view.View.VISIBLE
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_sources.*
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,10 +22,16 @@ import okhttp3.Response
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.IOException
+import java.util.*
+import kotlin.collections.ArrayList
+
 
 class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionListener,
     TopHeadlinesFragment.OnFragmentInteractionListener,
     SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener {
+    var recentsQueue: Queue<Source>? = LinkedList<Source>()
+    lateinit var progressDialog: ProgressDialog
+    lateinit var sharedPref: SharedPreferences
 
     override fun getSources() {
         val sources = GetNewsSources().execute()
@@ -35,6 +42,11 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        sharedPref = getSharedPreferences(
+            getString(R.string.preference_file_key), Context.MODE_PRIVATE
+        )
+        progressDialog = ProgressDialog(this)
+        progressDialog.setMessage("Loading...")
         navController = findNavController(R.id.nav_host_fragment)
     }
 
@@ -50,6 +62,16 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
             this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
         )
         sourcesRV.adapter = adapter
+    }
+
+    fun setUpRecentsRecyclerView(recentsArrayList: ArrayList<Source>) {
+        val recentsRV = findViewById<RecyclerView>(R.id.recentsRecyclerView)
+        recentsRV.layoutManager = LinearLayoutManager(this@MainActivity)
+        var adapter = SourceRecyclerViewAdapter(
+            recentsArrayList,
+            this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
+        )
+        recentsRV.adapter = adapter
     }
 
     inner class GetNewsSources : AsyncTask<Void, ArrayList<Source>, ArrayList<Source>>() {
@@ -87,13 +109,33 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
         }
 
         override fun onPostExecute(result: ArrayList<Source>?) {
+            if (progressDialog.isShowing) progressDialog.dismiss()
             if (result != null)
                 setUpSourcesRecyclerView(result!!)
+            if (recentsQueue?.size!! > 0) {
+                recentsSectionTextView.visibility = VISIBLE
+                recentsQueue?.let { ArrayList(it) }?.let { setUpRecentsRecyclerView(it) }
+            } else {
+                recentsSectionTextView.visibility = GONE
+            }
+        }
+
+        override fun onPreExecute() {
+            progressDialog.show()
+            super.onPreExecute()
         }
     }
 
+
     override fun onSourceClick(source: Source) {
         val bundle = bundleOf("selectedSource" to source)
+        if (recentsQueue?.size!! < 3) {
+            recentsQueue?.add(source)
+        } else {
+            recentsQueue!!.remove()
+            recentsQueue!!.add(source)
+        }
+        Log.d("demo", recentsQueue.toString())
         navController?.navigate(R.id.action_sourcesFragment_to_topHeadlinesFragment, bundle)
     }
 }
