@@ -2,18 +2,20 @@ package com.vbanjan.newsnext
 
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.recents_list_item.view.*
+import kotlinx.android.synthetic.main.recents_list_item.view.sourceTextView
+import kotlinx.android.synthetic.main.source_list_item.view.*
 
 class RecentsRecyclerViewAdapter(
     val recents: ArrayList<Source>,
-    val context: OnFragmentAdapterInteractionListener
+    val context: MainActivity
 ) :
     RecyclerView.Adapter<RecentsRecyclerViewAdapter.ViewHolder>() {
 
-    private val mListener: OnFragmentAdapterInteractionListener = context
+    private val mListener: MainActivity = context
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

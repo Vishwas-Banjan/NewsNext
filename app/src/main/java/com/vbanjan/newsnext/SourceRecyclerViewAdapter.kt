@@ -20,6 +20,7 @@ class SourceRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val source: Source = sources[position]
         holder.sourceTitle.text = source.name
+        holder.sourceDescription.text = source.description
         holder.sourceTitle.setOnClickListener {
             mListener.onSourceClick(sources[position])
         }
@@ -42,6 +43,7 @@ class SourceRecyclerViewAdapter(
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val sourceTitle: TextView = itemView.sourceTextView
+        val sourceDescription: TextView = itemView.sourceDescriptionTextView
     }
 
     interface OnFragmentAdapterInteractionListener {
