@@ -42,7 +42,7 @@ class TopHeadlinesFragment : Fragment() {
             if(!json.isNullOrEmpty()) {
                 val jsonObject = JSONObject(json);
                 val jsonArray = jsonObject.getJSONArray("articles");
-                for (i in 0 until jsonArray.length()-1) {
+                for (i in 0 until jsonArray.length()) {
                     val article = jsonArray.getJSONObject(i);
                     val title = article.get("title").toString();
                     val description = article.get("description").toString();
