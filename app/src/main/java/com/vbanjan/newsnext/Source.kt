@@ -8,6 +8,9 @@ class Source(val id: String, val name: String, val description: String) : Serial
     val sourceName: String = name
     val sourceDesciption: String = description
 
+    fun getID() : String{
+        return id;
+    }
     override fun toString(): String {
         return "Source(id='$id', name='$name', description='$description')\n"
     }
