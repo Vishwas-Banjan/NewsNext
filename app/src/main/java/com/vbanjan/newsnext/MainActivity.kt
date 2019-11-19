@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
             recentsQueue!!.remove()
             recentsQueue!!.add(source)
         }
-        Log.d("demo", recentsQueue.toString())
         navController?.navigate(R.id.action_sourcesFragment_to_topHeadlinesFragment, bundle)
+
     }
 }

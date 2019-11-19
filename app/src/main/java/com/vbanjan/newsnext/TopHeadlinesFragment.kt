@@ -26,6 +26,7 @@ class TopHeadlinesFragment : Fragment() {
         selectedSource = arguments!!.getSerializable("selectedSource").toString()
         var sourceObj=arguments!!.getSerializable("selectedSource") as Source
         GetTopHeadlines().execute(sourceObj.getID());
+        Log.d("demo",selectedSource)
     }
     inner class GetTopHeadlines: AsyncTask<String, Void, ArrayList<HeadLine>>() {
         override fun doInBackground(vararg p0: String): ArrayList<HeadLine> {
@@ -38,22 +39,23 @@ class TopHeadlinesFragment : Fragment() {
             val response: Response = client.newCall(request).execute()
             if (!response.isSuccessful) throw IOException("Unexpected Code: $response")
             val json: String = response.body!!.string()
-            Log.d("demo",json);
             if(!json.isNullOrEmpty()) {
                 val jsonObject = JSONObject(json);
                 val jsonArray = jsonObject.getJSONArray("articles");
-                for (i in 0 until jsonArray.length()) {
+                for (i in 0 until jsonArray.length()-1) {
                     val article = jsonArray.getJSONObject(i);
                     val title = article.get("title").toString();
                     val description = article.get("description").toString();
                     val urlHL = article.get("url").toString();
-                    val urlTL = article.get("urlToImage").toString();
-                    val publishedAt = article.get("publishedAt").toString();
-                    if (title.isEmpty() || description.isEmpty() || urlHL.isEmpty() || urlTL.isEmpty()) {
-                        break
-                    } else {
-                        headlines.add(HeadLine(title, description, urlHL, urlTL,publishedAt))
+                    var urlTL=""
+                    if(!article.get("urlToImage").toString().equals("null")) {
+                        urlTL = article.get("urlToImage").toString();
+                    }else{
+                        urlTL=""
                     }
+                    val publishedAt = article.get("publishedAt").toString();
+                    val content= article.get("content").toString();
+                    headlines.add(HeadLine(title, description, urlHL, urlTL,publishedAt,content))
                 }
             }
             return headlines;
@@ -67,7 +69,6 @@ class TopHeadlinesFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        Log.d("demo", selectedSource)
         return inflater.inflate(R.layout.fragment_top_headlines, container, false)
     }
 
