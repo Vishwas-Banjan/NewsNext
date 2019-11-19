@@ -1,18 +1,13 @@
 package com.vbanjan.newsnext
 
 import android.app.ProgressDialog
-import android.content.Context
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -66,9 +61,9 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     fun setUpRecentsRecyclerView(recentsArrayList: ArrayList<Source>) {
         val recentsRV = findViewById<RecyclerView>(R.id.recentsRecyclerView)
         recentsRV.layoutManager = LinearLayoutManager(this@MainActivity)
-        var adapter = SourceRecyclerViewAdapter(
+        var adapter = RecentsRecyclerViewAdapter(
             recentsArrayList,
-            this@MainActivity as SourceRecyclerViewAdapter.OnFragmentAdapterInteractionListener
+            this@MainActivity
         )
         recentsRV.adapter = adapter
     }
@@ -129,12 +124,14 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
     override fun onSourceClick(source: Source) {
         val bundle = bundleOf("selectedSource" to source)
         if (recentsQueue?.size!! < 3) {
-            if (!recentsQueue!!.contains(source))
+            if (!recentsQueue!!.contains(source)) {
                 recentsQueue?.add(source)
+            }
         } else {
             recentsQueue!!.remove()
-            if (!recentsQueue!!.contains(source))
+            if (!recentsQueue!!.contains(source)) {
                 recentsQueue?.add(source)
+            }
         }
         Log.d("demo", recentsQueue.toString())
 //        val builder = CustomTabsIntent.Builder()
