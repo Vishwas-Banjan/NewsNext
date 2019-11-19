@@ -24,6 +24,9 @@ class SourceRecyclerViewAdapter(
         holder.sourceTitle.setOnClickListener {
             mListener.onSourceClick(sources[position])
         }
+        holder.sourceDescription.setOnClickListener {
+            mListener.onSourceClick(sources[position])
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
