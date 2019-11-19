@@ -133,11 +133,7 @@ class MainActivity : AppCompatActivity(), SourcesFragment.OnFragmentInteractionL
                 recentsQueue?.add(source)
             }
         }
-        Log.d("demo", recentsQueue.toString())
-//        val builder = CustomTabsIntent.Builder()
-//        builder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary))
-//        val customTabsIntent = builder.build()
-//        customTabsIntent.launchUrl(this, Uri.parse("https://www.google.com"))
         navController?.navigate(R.id.action_sourcesFragment_to_topHeadlinesFragment, bundle)
+
     }
 }
