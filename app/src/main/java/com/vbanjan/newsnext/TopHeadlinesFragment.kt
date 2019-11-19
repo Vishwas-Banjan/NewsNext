@@ -3,6 +3,7 @@ package com.vbanjan.newsnext
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,11 +12,19 @@ import android.view.ViewGroup
 class TopHeadlinesFragment : Fragment() {
     private var listener: OnFragmentInteractionListener? = null
 
+    lateinit var selectedSource: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        selectedSource = arguments!!.getSerializable("selectedSource").toString()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        Log.d("demo", selectedSource)
         return inflater.inflate(R.layout.fragment_top_headlines, container, false)
     }
 
@@ -34,7 +43,6 @@ class TopHeadlinesFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
